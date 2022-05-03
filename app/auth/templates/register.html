@@ -34,6 +34,7 @@
         var letter = document.getElementById("letter");
         let lowerCase = new Observable(0);
         let upperCase = new Observable(0);
+        let numberValue = new Observable(0);
         let specialCharacter = new Observable(0);
         let passwordLength = new Observable(0);
 
@@ -79,44 +80,54 @@
         lowerCase.onChange(function (v) {
 
             if(v === 0) {
-                setProgressBarWidth(id,-25)
+                setProgressBarWidth(id,-20)
             } else {
-                setProgressBarWidth(id,+25)
+                setProgressBarWidth(id,+20)
             }
         });
 
         passwordLength.onChange(function (v) {
 
             if(v === 0) {
-                setProgressBarWidth(id,-25)
+                setProgressBarWidth(id,-20)
             } else {
-                setProgressBarWidth(id,+25)
+                setProgressBarWidth(id,+20)
             }
         });
 
         upperCase.onChange(function (v) {
 
             if(v === 0) {
-                setProgressBarWidth(id,-25)
+                setProgressBarWidth(id,-20)
             } else {
-                setProgressBarWidth(id,+25)
+                setProgressBarWidth(id,+20)
+            }
+        });
+
+        numberValue.onChange(function (v) {
+
+            if(v === 0) {
+                setProgressBarWidth(id,-20)
+            } else {
+                setProgressBarWidth(id,+20)
             }
         });
 
         specialCharacter.onChange(function (v) {
 
             if(v === 0) {
-                setProgressBarWidth(id,-25)
+                setProgressBarWidth(id,-20)
             } else {
-                setProgressBarWidth(id,+25)
+                setProgressBarWidth(id,+20)
             }
         });
 
 
         passwordField.onkeyup = function () {
-            // Validate lowercase letters
+            // Validate password
             let lowerCaseLetters = /[a-z]/g;
             let upperCaseLetters = /[A-Z]/g;
+            let numericValue = /[0-9]/g;
             let specialCharacters = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi;
             let passwordMinLength = 6;
 
@@ -125,7 +136,6 @@
             } else {
                 passwordLength.setValue(0);
             }
-
             if (passwordField.value.match(lowerCaseLetters)) {
                 lowerCase.setValue(1);
             } else {
@@ -135,6 +145,11 @@
                 upperCase.setValue(1);
             } else {
                 upperCase.setValue(0);
+            }
+            if (passwordField.value.match(numericValue)) {
+                numberValue.setValue(1);
+            } else {
+                numberValue.setValue(0);
             }
             if (passwordField.value.match(specialCharacters)) {
                 specialCharacter.setValue(1);
