@@ -27,6 +27,7 @@ class Song(db.Model,SerializerMixin):
         self.title = title
         self.artist = artist
 
+
 class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
@@ -34,7 +35,6 @@ class Location(db.Model, SerializerMixin):
     longitude = db.Column(db.String(300), nullable=True, unique=False)
     latitude = db.Column(db.String(300), nullable=True, unique=False)
     population = db.Column(db.Integer, nullable=True, unique=False)
-
 
     def __init__(self, title, longitude, latitude, population):
         self.title = title
@@ -45,8 +45,8 @@ class Location(db.Model, SerializerMixin):
     def serialize(self):
         return {
             'title': self.title,
-            'long': self.longitude,
-            'lat': self.latitude,
+            'longitude': self.longitude,
+            'latitude': self.latitude,
             'population': self.population,
         }
 

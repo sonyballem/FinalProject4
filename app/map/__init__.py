@@ -3,14 +3,16 @@ import json
 import logging
 import os
 
-from flask import Blueprint, render_template, abort, url_for, current_app, jsonify
+from flask import Blueprint, render_template, abort, url_for, current_app, jsonify, flash
 from flask_login import current_user, login_required
 from jinja2 import TemplateNotFound
 
+from app.auth import admin_required
 from app.db import db
-from app.db.models import Location
+from app.map.forms import location_edit_form, add_location_form
 from app.songs.forms import csv_upload
 from werkzeug.utils import secure_filename, redirect
+from app.db.models import User, Location, location_user
 from flask import Response
 
 map = Blueprint('map', __name__,
@@ -18,15 +20,28 @@ map = Blueprint('map', __name__,
 
 @map.route('/locations', methods=['GET'], defaults={"page": 1})
 @map.route('/locations/<int:page>', methods=['GET'])
+@login_required
+@admin_required
 def browse_locations(page):
     page = page
     per_page = 10
     pagination = Location.query.paginate(page, per_page, error_out=False)
     data = pagination.items
+    titles = [('title', 'Title'), ('longitude', 'Longitude'), ('latitude', 'Latitude'), ('population', 'Population')]
+    location_retrieve_url = ('map.location_retrieve', [('location_id', ':id')])
+    location_edit_url = ('map.location_edit', [('location_id', ':id')])
+    location_delete_url = ('map.delete_location', [('location_id', ':id')])
+    location_new_url = url_for('map.location_new')
+    current_app.logger.info("Browse page loading")
+
     try:
-        return render_template('browse_locations.html',data=data,pagination=pagination)
+        return render_template('browse_locations.html', data=data, titles=titles, pagination=pagination,
+                               location_retrieve_url=location_retrieve_url, location_edit_url=location_edit_url,
+                               location_new_url=location_new_url,
+                               location_delete_url=location_delete_url, Location=Location, record_type="Locations")
     except TemplateNotFound:
         abort(404)
+
 
 @map.route('/locations_datatables/', methods=['GET'])
 def browse_locations_datatables():
@@ -83,3 +98,61 @@ def location_upload():
         return render_template('upload_locations.html', form=form)
     except TemplateNotFound:
         abort(404)
+
+
+#Locations Actions
+
+@map.route('/locations/view/<int:location_id>')
+@login_required
+def location_retrieve(location_id):
+    location = Location.query.get(location_id)
+    return render_template('location_view.html', location=location)
+
+
+@map.route('/locations/<int:location_id>/delete', methods=['POST'])
+@login_required
+def delete_location(location_id):
+    location = Location.query.get(location_id)
+    db.session.delete(location)
+    db.session.commit()
+    flash('Location Deleted', 'success')
+    return redirect(url_for('map.browse_locations'), 302)
+
+
+@map.route('/locations/<int:location_id>/edit', methods=['POST', 'GET'])
+@login_required
+def location_edit(location_id):
+    location = Location.query.get(location_id)
+    form = location_edit_form(obj=location)
+    if form.validate_on_submit():
+        location.title = form.title.data
+        location.longitude = form.longitude.data
+        location.latitude = form.latitude.data
+        location.population = form.population.data
+
+        db.session.add(location)
+        db.session.commit()
+        flash('Location Edited Successfully', 'success')
+        current_app.logger.info("edited a location")
+        return redirect(url_for('map.browse_locations'))
+    return render_template('location_edit.html', form=form)
+
+
+@map.route('/locations/new', methods=['POST', 'GET'])
+@login_required
+def location_new():
+    form = add_location_form()
+    if form.validate_on_submit():
+        location = Location.query.filter_by(title=form.title.data).first()
+        if location is None:
+            location = Location(title=form.title.data, longitude=form.longitude.data, latitude=form.latitude.data,
+                                population=form.population.data)
+            db.session.add(location)
+            db.session.commit()
+            flash('Congratulations, you just created a location', 'success')
+            return redirect(url_for('map.browse_locations'))
+        else:
+            flash('Already Added')
+            return redirect(url_for('map.browse_locations'))
+    return render_template('location_new.html', form=form)
+
