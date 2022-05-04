@@ -32,7 +32,7 @@
                 locations = JSON.parse(xmlHttpReq.responseText);
                 const myLatLng = {
                     lat: parseFloat(locations["data"][0].lat),
-                    lng: parseFloat(locations["data"][0].lng)
+                    lng: parseFloat(locations["data"][0].long)
                 };
 
 
