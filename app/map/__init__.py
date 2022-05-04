@@ -21,7 +21,7 @@ map = Blueprint('map', __name__,
 @map.route('/locations', methods=['GET'], defaults={"page": 1})
 @map.route('/locations/<int:page>', methods=['GET'])
 @login_required
-@admin_required
+#@admin_required
 def browse_locations(page):
     page = page
     per_page = 10
