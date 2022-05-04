@@ -67,9 +67,6 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-
-
-
 @auth.route('/dashboard', methods=['GET'], defaults={"page": 1})
 @auth.route('/dashboard/<int:page>', methods=['GET'])
 @login_required
