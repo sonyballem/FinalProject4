@@ -32,8 +32,9 @@
                 locations = JSON.parse(xmlHttpReq.responseText);
                 const myLatLng = {
                     lat: parseFloat(locations["data"][0].lat),
-                    lng: parseFloat(locations["data"][0].long)
+                    lng: parseFloat(locations["data"][0].lng)
                 };
+                console.log(myLatLng)
 
 
                 map = new google.maps.Map(document.getElementById("map"), {
@@ -41,7 +42,7 @@
                     zoom: 5,
                 });
                 locations.data.forEach((item, index) => {
-                    const cord = {lat: parseFloat(item.lat), lng: parseFloat(item.long)};
+                    const cord = {lat: parseFloat(item.lat), lng: parseFloat(item.lng)};
                     let tooltip = '<h2>' + item.title + '</h2>' + 'Population: ' + item.population.toLocaleString("en-US");
 
                     const infowindow = new google.maps.InfoWindow({

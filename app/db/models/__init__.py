@@ -45,8 +45,8 @@ class Location(db.Model, SerializerMixin):
     def serialize(self):
         return {
             'title': self.title,
-            'longitude': self.longitude,
-            'latitude': self.latitude,
+            'lng': self.longitude,
+            'lat': self.latitude,
             'population': self.population,
         }
 
