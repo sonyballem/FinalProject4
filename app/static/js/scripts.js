@@ -3,7 +3,8 @@ const solvebtn = document.querySelector('#solve-btn')
 const solutionDisplay = document.querySelector('#solution')
 const squares = 81
 const submission = []
-
+// const dotenv = require('dotenv').config();
+// console.log(process.env);
 
 for (let i=0; i< squares; i++) {
     const inputElement = document.createElement('input')
@@ -57,7 +58,7 @@ const solve = () => {
       headers: {
         'content-type': 'application/json',
         'X-RapidAPI-Host': 'solve-sudoku.p.rapidapi.com',
-        'X-RapidAPI-Key': process.env.RAPID_API_KEY
+        'X-RapidAPI-Key': '3abf2355c8msh981d33a0a8065d8p132aa3jsn679e1f4aa28b'
       },
       data: {
           puzzle: data}
