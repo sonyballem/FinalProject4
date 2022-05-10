@@ -35,14 +35,16 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="navbar-nav mr-auto">
+                        {{ render_nav_item('simple_pages.welcome','Welcome') }}
                         {% if current_user.is_authenticated %}
                             {{ render_nav_item('auth.dashboard','Dashboard' ) }}
                         {% else %}
                             {{ render_nav_item('simple_pages.index', 'Home') }}
                         {% endif %}
+
                         {{ render_nav_item('map.map_locations','Map' ) }}
                         {{ render_nav_item('simple_pages.about','About') }}
-                        {{ render_nav_item('simple_pages.welcome','Welcome') }}
+
                     </div>
                 </div>
                 <div class="navbar-nav d-flex">
@@ -87,7 +89,12 @@
     </div>
 </div>
 
-
+ <style>
+        .navbar-nav {
+            margin: 2% !important;
+            align: center !important;
+        }
+</style>
 
 
 {% block scripts %}
