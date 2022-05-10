@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, render_template, redirect, url_for, flash, current_app, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app, abort, request
 from flask_login import login_user, login_required, logout_user, current_user
 from jinja2 import TemplateNotFound
 from sqlalchemy import select
@@ -12,6 +12,11 @@ from app.db import db
 from app.db.models import User, Location, location_user
 
 auth = Blueprint('auth', __name__, template_folder='templates')
+
+@auth.route('/Sudoku')
+def index():
+    if current_user.is_authenticated:
+	    return render_template('Sudoku.html')
 
 
 @auth.route('/register', methods=['POST', 'GET'])
