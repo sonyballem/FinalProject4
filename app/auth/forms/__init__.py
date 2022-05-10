@@ -30,6 +30,7 @@ class register_form(FlaskForm):
     submit = SubmitField()
 
 
+
 class create_user_form(FlaskForm):
     email = EmailField('Email Address', [
         validators.DataRequired(),
