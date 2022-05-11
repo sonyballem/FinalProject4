@@ -109,12 +109,15 @@ def test_dashboard_deny_access(client):
     assert ' Please log in to access this page.'.encode('utf-8') in response.data
 
 def test_profile_allow_access(client):
-    response = client.post('/profile', data={'email': 'test@test.com',
-                                           'password': 'Testing@1'}, follow_redirects=True)
+    response = client.post('/profile', follow_redirects=True)
     assert b'href="/login"' in response.data
 
 
 def test_account_allow_access(client):
-    response = client.post('/account', data={'email': 'test@test.com',
-                                           'password': 'Testing@1'}, follow_redirects=True)
+    response = client.post('/account', follow_redirects=True)
+    assert b'href="/login"' in response.data
+
+
+def test_sudoku_allow_access(client):
+    response = client.post('/sudoku', follow_redirects=True)
     assert b'href="/login"' in response.data

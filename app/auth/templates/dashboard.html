@@ -6,7 +6,7 @@
 <div class="row col-8">
     {% block title %}Welcome: {{ current_user.email }}{% endblock %}
     {% block content %}
-        <h2>Welcome: {{ current_user.email }}</h2>
+        <h2>Welcome, {{ current_user.email }}</h2>
         {{ render_table(data) }}
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -19,6 +19,8 @@
         <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 
+        <h3>About yourself that you have added!</h3>
+        <p>{{ current_user.about }}</p>
 
         <script type=text/javascript>
             $(document).ready(function () {

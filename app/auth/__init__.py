@@ -103,6 +103,7 @@ def dashboard(page):
     except TemplateNotFound:
         abort(404)
 
+
 @auth.route('/profile', methods=['POST', 'GET'])
 def edit_profile():
     user = User.query.get(current_user.get_id())
