@@ -13,7 +13,8 @@ from app.db.models import User, Location, location_user
 
 auth = Blueprint('auth', __name__, template_folder='templates')
 
-@auth.route('/Sudoku')
+@auth.route('/Sudoku', methods=['POST', 'GET'])
+@login_required
 def index():
     if current_user.is_authenticated:
 	    return render_template('Sudoku.html')
@@ -102,6 +103,7 @@ def dashboard(page):
         return render_template('dashboard.html',data=data)
     except TemplateNotFound:
         abort(404)
+
 
 @auth.route('/profile', methods=['POST', 'GET'])
 def edit_profile():

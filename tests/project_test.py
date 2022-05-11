@@ -7,19 +7,19 @@
 6. SignUp Invalid email entry
 7. SignUp passwords doesn't match
 8. SignUp password Invalid
-9. Missing email SignUp
-10. Missing password SignUp
+9. Missing email register
+10. Missing password register
 11. Missing email signin
 12. Missing password signin
 13. Dashboard page loading successful user authentication
-14. Dashbaard User email entry.
+14. Dashboard User email entry.
 15. Manage profile -> About -> post successful
-16. Manage profile -> About -> edit sucessful
+16. Manage profile -> About -> edit successful
 17. Manage Account -> Password change successful
-18. Manage Account -> Email chnage successful
+18. Manage Account -> Email change successful
 19. Manage profile loading successful user authentication
 20. Manage Account loading successful user authentication
-21. Manage Account -> Passwords doesnt match
+21. Manage Account -> Passwords doesn't match
 22. Manage Account -> Password not valid
 23. Manage Account -> Email not valid
 24. Sudoku -> User input successful
@@ -30,13 +30,13 @@
 
 
 def test_signup(client):
-   response = client.get('/register')
-   assert response.status_code == 200
+    response = client.get('/register')
+    assert response.status_code == 200
 
 
 def test_signin(client):
-   response  = client.get('/login')
-   assert response.status_code == 200
+    response = client.get('/login')
+    assert response.status_code == 200
 
 
 def test_successful_registration(client):
@@ -49,10 +49,38 @@ def test_successful_registration(client):
 
 
 def test_check_registration(client):
-     response = client.post('/register', data={'email': 'test@test.com',
-                                            'password': 'Testing@1',
-                                             'confirm' : 'Testing@1'}, follow_redirects=True)
-     assert b'href="/register"' in response.data
+    response = client.post('/register', data={'email': 'test@test.com',
+                                              'password': 'Testing@1',
+                                              'confirm': 'Testing@1'}, follow_redirects=True)
+    assert b'href="/register"' in response.data
+
+
+def test_missing_email_registration(client):
+    response = client.post('/register', data={'email': '',
+                                              'password': 'Testing@1',
+                                              'confirm': 'Testing@1'}, follow_redirects=True)
+    assert b'href="/register"' in response.data
+
+
+def test_missing_password_registration(client):
+    response = client.post('/register', data={'email': 'test@test.com',
+                                              'password': '',
+                                              'confirm': 'Testing@1'}, follow_redirects=True)
+    assert b'href="/register"' in response.data
+
+
+def test_missing_confirm_registration(client):
+    response = client.post('/register', data={'email': 'test@test.com',
+                                              'password': 'Testing@1',
+                                              'confirm': ''}, follow_redirects=True)
+    assert b'href="/register"' in response.data
+
+
+def test_missing_email_password_confirm_registration(client):
+    response = client.post('/register', data={'email': '',
+                                              'password': '',
+                                              'confirm': ''}, follow_redirects=True)
+    assert b'href="/register"' in response.data
 
 
 def test_successful_login(client):
@@ -63,37 +91,58 @@ def test_successful_login(client):
 
 
 def test_bad_email_login(client):
-     response = client.post('/login', data={'email': 'test@fake.com',
-                                            'password': 'Testing'}, follow_redirects=True)
-     assert response.status_code == 200
-     assert b'href="/login"' in response.data
+    response = client.post('/login', data={'email': 'test@fake.com',
+                                           'password': 'Testing@1'}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'href="/login"' in response.data
+
+
+def test_missing_email_login(client):
+    response = client.post('/login', data={'email': '',
+                                           'password': 'Testing@1'}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'href="/login"' in response.data
+
+
+def test_missing_password_login(client):
+    response = client.post('/login', data={'email': 'test@test.com',
+                                           'password': ''}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'href="/login"' in response.data
+
+
+def test_missing_email_password_login(client):
+    response = client.post('/login', data={'email': '',
+                                           'password': ''}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'href="/login"' in response.data
 
 
 def test_bad_password_login(client):
-     response = client.post('/login', data={'email': 'test@test.com',
-                                            'password': 'odfsdfmsdl'}, follow_redirects=True)
-     assert response.status_code == 200
-     assert b'href="/login"' in response.data
+    response = client.post('/login', data={'email': 'test@test.com',
+                                           'password': 'odfsdfmsdl'}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'href="/login"' in response.data
 
 
 def test_short_password_login(client):
-     response = client.post('/login', data={'email': 'test@test.com',
-                                            'password': 'otp'}, follow_redirects=True)
-     assert response.status_code == 200
-     assert 'Field must be between 6 and 35 characters'.encode('utf-8') in response.data
+    response = client.post('/login', data={'email': 'test@test.com',
+                                           'password': 'otp'}, follow_redirects=True)
+    assert response.status_code == 200
+    assert 'Field must be between 6 and 35 characters'.encode('utf-8') in response.data
 
 
 def test_password_match_registration(client):
-     response = client.post('/register', data={'email': 'xyz@gmail.com',
-                                            'password': 'Testing',
-                                             'confirm' : 'random'}, follow_redirects=True)
-     assert 'Passwords must match'.encode('utf-8') in response.data
+    response = client.post('/register', data={'email': 'xyz@gmail.com',
+                                              'password': 'Testing',
+                                              'confirm': 'random'}, follow_redirects=True)
+    assert 'Passwords must match'.encode('utf-8') in response.data
 
 
 def test_email_criteria_registration(client):
     response = client.post('/register', data={'email': 'xyz',
-                                           'password': 'Testing@1',
-                                            'confirm' : 'Testing@1'})
+                                              'password': 'Testing@1',
+                                              'confirm': 'Testing@1'})
     assert b'href="/login"' in response.data
 
 
@@ -104,17 +153,25 @@ def test_dashboard_allow_access(client):
 
 
 def test_dashboard_deny_access(client):
-
     response = client.get('/dashboard', follow_redirects=True)
-    assert ' Please log in to access this page.'.encode('utf-8') in response.data
+    assert 'Please log in to access this page.'.encode('utf-8') in response.data
+
 
 def test_profile_allow_access(client):
-    response = client.post('/profile', data={'email': 'test@test.com',
-                                           'password': 'Testing@1'}, follow_redirects=True)
+    response = client.post('/profile', follow_redirects=True)
     assert b'href="/login"' in response.data
 
 
 def test_account_allow_access(client):
-    response = client.post('/account', data={'email': 'test@test.com',
-                                           'password': 'Testing@1'}, follow_redirects=True)
+    response = client.post('/account', follow_redirects=True)
+    assert b'href="/login"' in response.data
+
+
+def test_sudoku_allow_access(client):
+    response = client.post('/sudoku', follow_redirects=True)
+    assert b'href="/login"' in response.data
+
+
+def test_sudoku_deny_access(client):
+    response = client.get('/sudoku', follow_redirects=True)
     assert b'href="/login"' in response.data
