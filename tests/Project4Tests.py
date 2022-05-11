@@ -27,3 +27,8 @@
 26. Sudoku -> Authentication error
 27.
 '''
+
+#def test_signup(client):
+#    response = client.get('/register')
+#    print(response.data)
+#    assert response.status_code == 200
