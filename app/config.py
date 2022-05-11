@@ -13,6 +13,7 @@ class Config(object):
     UPLOAD_FOLDER =  os.getenv('UPLOAD_FOLDER', os.path.join(BASE_DIR,'..' , 'uploads'))
     GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY','NOKEY')
     LOG_DIR =  os.path.join(BASE_DIR, '../logs')
+    WTF_CSRF_ENABLED = False
 class ProductionConfig(Config):
     pass
 

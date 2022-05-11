@@ -18,6 +18,13 @@ def index():
     if current_user.is_authenticated:
 	    return render_template('Sudoku.html')
 
+    RAPID_API_KEY = current_app.config.get('RAPID_API_KEY')
+    try:
+        return render_template('Sudoku.html', google_api_key=RAPID_API_KEY)
+    except TemplateNotFound:
+        abort(404)
+
+
 
 @auth.route('/register', methods=['POST', 'GET'])
 def register():
@@ -48,8 +55,11 @@ def login():
         return redirect(url_for('auth.dashboard'))
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+        if user is None:
+            flash("Invalid Email")
+            return redirect(url_for('auth.login'))
+        if not user.check_password(form.password.data):
+            flash('Invalid password')
             return redirect(url_for('auth.login'))
         else:
             user.authenticated = True
